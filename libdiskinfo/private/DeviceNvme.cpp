@@ -48,8 +48,8 @@ struct STORAGE_PROTOCOL_SPECIFIC_QUERY_WITH_BUFFER
     { // STORAGE_PROPERTY_QUERY without AdditionalsParameters[1]
         STORAGE_PROPERTY_ID PropertyId;
         STORAGE_QUERY_TYPE QueryType;
-    } PropertyQuery;
-    STORAGE_PROTOCOL_SPECIFIC_DATA ProtocolSpecific;
+    } propertyQuery;
+    STORAGE_PROTOCOL_SPECIFIC_DATA protocolSpecific;
     BYTE DataBuffer[NVME_MAX_LOG_SIZE];
 };
 
@@ -60,23 +60,23 @@ void DeviceNvme::Identify()
     auto specificdata = STORAGE_PROTOCOL_SPECIFIC_QUERY_WITH_BUFFER();
 
     if (scope == Scope::ADAPTER_SCOPE)
-        specificdata.PropertyQuery.PropertyId = StorageDeviceProtocolSpecificProperty;
+        specificdata.propertyQuery.PropertyId = StorageDeviceProtocolSpecificProperty;
     else if (scope == Scope::DEVICE_SCOPE)
-        specificdata.PropertyQuery.PropertyId = StorageAdapterProtocolSpecificProperty;
+        specificdata.propertyQuery.PropertyId = StorageAdapterProtocolSpecificProperty;
 
-    specificdata.PropertyQuery.QueryType = PropertyStandardQuery;
-    specificdata.ProtocolSpecific.ProtocolType = ProtocolTypeNvme;
-    specificdata.ProtocolSpecific.DataType = NVME_DATA_TYPE_IDENTIFY;
-    specificdata.ProtocolSpecific.ProtocolDataRequestValue = 1;
-    specificdata.ProtocolSpecific.ProtocolDataRequestSubValue = 0;
+    specificdata.propertyQuery.QueryType = PropertyStandardQuery;
+    specificdata.protocolSpecific.ProtocolType = ProtocolTypeNvme;
+    specificdata.protocolSpecific.DataType = NVME_DATA_TYPE_IDENTIFY;
+    specificdata.protocolSpecific.ProtocolDataRequestValue = 1;
+    specificdata.protocolSpecific.ProtocolDataRequestSubValue = 0;
 
     // Must subtract 8 from the offset to account for putting PropertyID and QueryType into
     // Protocol Specific Data(they are actually part of Storage Property Query Structure)
     const auto protocolDataOffset =
         sizeof(STORAGE_PROTOCOL_SPECIFIC_DATA) - 8 - NVME_MAX_LOG_SIZE;
 
-    specificdata.ProtocolSpecific.ProtocolDataOffset = protocolDataOffset;
-    specificdata.ProtocolSpecific.ProtocolDataLength = NVME_MAX_LOG_SIZE;
+    specificdata.protocolSpecific.ProtocolDataOffset = protocolDataOffset;
+    specificdata.protocolSpecific.ProtocolDataLength = NVME_MAX_LOG_SIZE;
 
     DWORD bytesReturned = 0;
     const auto ret = DeviceIoControl(handle_.get(), IOCTL_STORAGE_QUERY_PROPERTY,

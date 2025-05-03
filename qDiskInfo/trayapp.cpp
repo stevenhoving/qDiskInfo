@@ -64,7 +64,12 @@ QMenu* TrayApp::CreateTrayMenu()
 
 QIcon TrayApp::createIconWithTemperature(int temp)
 {
-    const int iconSize = 64;
+    // 48px seems to be the default tray icon size for windows 11.
+    // - can we lookup the correct size somehow?
+    // 
+    //const int iconSize = 64;
+    const int iconSize = 48;
+    
     QPixmap pixmap(iconSize, iconSize);
     pixmap.fill(Qt::transparent);
 
@@ -74,7 +79,8 @@ QIcon TrayApp::createIconWithTemperature(int temp)
     font.setPointSize(42);
 
     painter.setFont(font);
-    painter.setPen(Qt::white);
+    //painter.setPen(Qt::white);
+    painter.setPen(Qt::black);
 
     painter.drawText(pixmap.rect(), Qt::AlignCenter, QString::number(temp));
     painter.end();

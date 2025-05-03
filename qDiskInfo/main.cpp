@@ -5,8 +5,8 @@
 #include "trayapp.h"
 #include "temperature_provider.h"
 
-
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[])
+{
     QApplication app(argc, argv);
     QApplication::setQuitOnLastWindowClosed(false);
 
@@ -19,8 +19,8 @@ int main(int argc, char *argv[]) {
     if (engine.rootObjects().isEmpty())
         return -1;
 
-    DummyTemperature tempProvider;
-    //SmartTemperature tempProvider(0);
+    // DummyTemperature tempProvider;
+    SmartTemperature tempProvider(0);
     TrayApp trayApp(&tempProvider, trayHandler);
     trayApp.start();
 

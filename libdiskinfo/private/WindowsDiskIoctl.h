@@ -67,45 +67,10 @@ struct XX_ATA_PASS_THROUGH_DIRECT
     LogBuffer logbuffer;
 };
 
-/*
-typedef struct _STORAGE_PROTOCOL_SPECIFIC_DATA {
-    STORAGE_PROTOCOL_TYPE ProtocolType;
-    DWORD   DataType;                     // The value will be protocol specific, as defined in STORAGE_PROTOCOL_NVME_DATA_TYPE or STORAGE_PROTOCOL_ATA_DATA_TYPE.
 
-    DWORD   ProtocolDataRequestValue;
-    DWORD   ProtocolDataRequestSubValue;  // Data sub request value
-
-    DWORD   ProtocolDataOffset;           // The offset of data buffer is from beginning of this data structure.
-    DWORD   ProtocolDataLength;
-
-    DWORD   FixedProtocolReturnData;
-    DWORD   ProtocolDataRequestSubValue2; // First additional data sub request value
-
-    DWORD   ProtocolDataRequestSubValue3; // Second additional data sub request value
-    DWORD   ProtocolDataRequestSubValue4; // Third additional data sub request value
-
-} STORAGE_PROTOCOL_SPECIFIC_DATA, *PSTORAGE_PROTOCOL_SPECIFIC_DATA;
-*/
-
-struct XX_STORAGE_PROTOCOL_SPECIFIC_DATA
-{
-    DWORD PropertyId;
-    DWORD QueryType;
-
-    // STORAGE_PROTOCOL_SPECIFIC_DATA
-    DWORD ProtocolType;
-    ULONG DataType;
-    ULONG ProtocolDataRequestValue;
-    ULONG ProtocolDataRequestSubValue;
-    ULONG ProtocolDataOffset;
-    ULONG ProtocolDataLength;
-    ULONG FixedProtocolReturnData;
-    ULONG ProtocolDataRequestSubValue2;
-    ULONG ProtocolDataRequestSubValue3;
-    ULONG ProtocolDataRequestSubValue4;
-    LogBuffer logbuffer;
-};
-
+/*!
+ * STORAGE_PROPERTY_QUERY variant without the data[1] component
+ */
 struct STORAGE_PROPERTY_QUERY_EX
 {
     STORAGE_PROPERTY_ID PropertyId;
@@ -120,8 +85,8 @@ struct STORAGE_PROPERTY_QUERY_EX
  */
 struct STORAGE_PROTOCOL_SPECIFIC_QUERY_WITH_BUFFER
 {
-    STORAGE_PROPERTY_QUERY_EX PropertyQuery;
-    STORAGE_PROTOCOL_SPECIFIC_DATA ProtocolSpecific;
+    STORAGE_PROPERTY_QUERY_EX propertyQuery;
+    STORAGE_PROTOCOL_SPECIFIC_DATA protocolSpecific;
     LogBuffer logbuffer;
 };
 

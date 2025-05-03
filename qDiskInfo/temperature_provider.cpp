@@ -2,6 +2,7 @@
 #include "libdiskinfo/DiskInfo.h"
 #include <cstdlib>
 #include <ctime>
+#include <qdebug>
 
 int DummyTemperature::GetTemperature()
 {
@@ -20,6 +21,11 @@ public:
         return diskInfo_.GetTemperature();
     }
 
+    auto GetIdentity() -> IdentifyDeviceResult
+    {
+        return diskInfo_.GetIdentity();
+    }
+
 private:
     DiskInfo diskInfo_;
 };
@@ -27,7 +33,10 @@ private:
 SmartTemperature::SmartTemperature(const int deviceIndex)
     : pImpl_(std::make_unique<SmartTemperatureImpl>(deviceIndex))
 {
+    auto id = pImpl_->GetIdentity();
+    qDebug() << id.model;
 }
+
 SmartTemperature::~SmartTemperature() = default;
 
 int SmartTemperature::GetTemperature()

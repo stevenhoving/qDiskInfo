@@ -1,6 +1,6 @@
 #pragma once
 
-#include "DeviceIdentity.h"
+#include "libdiskinfo/DeviceIdentity.h"
 #include <span>
 #include <cstdint>
 #include <vector>
@@ -49,11 +49,11 @@ public:
     auto BufferToSMARTValueList(std::span<uint8_t> buffer) -> SMARTValueList;
 
 private:
-    auto GetFirmwareFromBuffer(std::span<uint8_t> buffer) -> std::string;
-    auto GetModelFromBuffer(std::span<uint8_t> buffer) -> std::string;
-    auto GetSerialFromBuffer(std::span<uint8_t> buffer) -> std::string;
-    auto GetDataSetManagementSupported(std::span<uint8_t> buffer) -> bool;
-    auto GetLBASizeFromBuffer() -> uint32_t;
+    auto ReadFirmware(std::span<uint8_t> buffer) -> std::string;
+    auto ReadModel(std::span<uint8_t> buffer) -> std::string;
+    auto ReadSerial(std::span<uint8_t> buffer) -> std::string;
+    auto ReadDataSetManagementSupported(std::span<uint8_t> buffer) -> bool;
+    auto ReadLBASize() -> uint32_t;
     auto GetLBASize(std::span<uint8_t> buffer) -> int;
 
     auto SeperateCriticalWarningFrom(std::span<uint8_t> buffer) -> SMARTValueEntry;

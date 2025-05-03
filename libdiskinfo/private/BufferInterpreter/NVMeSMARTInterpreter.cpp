@@ -136,7 +136,7 @@ auto NVMeBufferInterpreter::GetLBASize(std::span<uint8_t> buffer) -> int
     return ReadValue<int>(buffer, 8, 11);
 }
 
-auto NVMeBufferInterpreter::GetLBASizeFromBuffer() -> uint32_t
+auto NVMeBufferInterpreter::ReadLBASize() -> uint32_t
 {
     return 512; // ATA_LBA_SIZE
 }
@@ -157,22 +157,22 @@ auto ExtractStringFromBuffer(std::span<uint8_t> buffer, int start, int end) -> s
     return result;
 }
 
-auto NVMeBufferInterpreter::GetModelFromBuffer(std::span<uint8_t> buffer) -> std::string
+auto NVMeBufferInterpreter::ReadModel(std::span<uint8_t> buffer) -> std::string
 {
     return ExtractStringFromBuffer(buffer, 24, 63);
 }
 
-auto NVMeBufferInterpreter::GetFirmwareFromBuffer(std::span<uint8_t> buffer) -> std::string
+auto NVMeBufferInterpreter::ReadFirmware(std::span<uint8_t> buffer) -> std::string
 {
     return ExtractStringFromBuffer(buffer, 64, 71);
 }
 
-auto NVMeBufferInterpreter::GetSerialFromBuffer(std::span<uint8_t> buffer) -> std::string
+auto NVMeBufferInterpreter::ReadSerial(std::span<uint8_t> buffer) -> std::string
 {
     return ExtractStringFromBuffer(buffer, 4, 23);
 }
 
-auto NVMeBufferInterpreter::GetDataSetManagementSupported(std::span<uint8_t> buffer) -> bool
+auto NVMeBufferInterpreter::ReadDataSetManagementSupported(std::span<uint8_t> buffer) -> bool
 {
     static constexpr auto dataSetManagementStart = 520;
     return (buffer[dataSetManagementStart] & 0x04) == 4;
@@ -181,13 +181,13 @@ auto NVMeBufferInterpreter::GetDataSetManagementSupported(std::span<uint8_t> buf
 auto NVMeBufferInterpreter::BufferToIdentifyDeviceResult(std::span<uint8_t> buffer) -> IdentifyDeviceResult
 {
     auto result = IdentifyDeviceResult{};
-    result.model = GetModelFromBuffer(buffer);
-    result.firmware = GetFirmwareFromBuffer(buffer);
-    result.serial = GetSerialFromBuffer(buffer);
+    result.model = ReadModel(buffer);
+    result.firmware = ReadFirmware(buffer);
+    result.serial = ReadSerial(buffer);
     result.userSizeInKB = 0;
     result.SATASpeed = SataSpeed::NotSATA;
-    result.lbaSize = GetLBASizeFromBuffer();
-    result.IsDataSetManagementSupported = GetDataSetManagementSupported(buffer);
+    result.lbaSize = ReadLBASize();
+    result.IsDataSetManagementSupported = ReadDataSetManagementSupported(buffer);
     return result;
 }
 
